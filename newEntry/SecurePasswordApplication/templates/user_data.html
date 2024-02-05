@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>user data</title>
+    <style>
+        body {
+            background-image: url("https://static.vecteezy.com/system/resources/previews/001/330/277/original/cyber-technology-security-network-protection-design-free-vector.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .content {
+            padding: 20px;
+            border-radius: 3px;
+            // background-color: rgba(255, 255, 255, 0.9);
+            background-color: black;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            overflow: auto;
+        }
+
+        .content p {
+            font-size: 24px;
+            color: white;
+            background-color: #1c2e4a;
+            margin-bottom: 10px;
+            padding: 10px;
+            line-height: 1.2;
+        }
+
+        button {
+            font-size: 20px;
+            display: block;
+            margin: 10px auto;
+            width: 200px;
+            height: 50px;
+            background-color: #4D4DFF;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        input {
+            background-color:black;
+            width: 70%;
+            height: 50px;
+            text-align:center;
+            font-size: 20px;
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: none; /* Hide inputs initially */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="naam" class="content"></div>
+</div>
+<br>
+<br>
+{% if context_data %}
+<script>
+    var context_json = JSON.parse('{{ context_data|safe|escapejs }}');
+    console.log(context_json);
+    var website_name = context_json['website_name'];
+    var user_account = context_json['user_account'];
+    var user_password = context_json['user_password'];
+    var rating = context_json['rating'];
+    var idm = context_json['id']
+    // console.log(idm[0])
+    var len = Object.keys(website_name).length;
+
+    var divm = document.getElementById('naam');
+    console.log(divm);
+
+    for (var i = 0; i < len; i++) {
+        var divc = document.createElement('div');
+        divc.style.backgroundColor = "#1c2e4a";
+        var dcc = document.createElement('p');
+        var br1 = document.createElement('br');
+        var br2 = document.createElement('br');
+        dcc.textContent = i + "] Website Name: " + website_name[i];
+        dcc.style.backgroundColor = "#1c2e4a";
+        dcc.setAttribute('id','div-'+i)
+        var submit = document.createElement('button');
+        var submit2 = document.createElement('button');
+        submit.textContent = "Change the user name";
+        submit2.textContent = "Change the user password";
+        submit2.style.display = "none"
+        submit.setAttribute('id', "butt-" + i);
+        submit2.setAttribute('id', "butt11-" + i);
+
+        var form = document.createElement('form');
+        form.style.display = "none"; /* Hide the form initially */
+        form.setAttribute('method', "POST");
+        form.setAttribute('action', "{% url 'user_data' %}");
+        form.style.backgroundColor = "#1c2e4a";
+        form.style.padding = "20px";
+        form.style.width = "400px";
+        form.style.borderRadius = "5px";
+        form.style.display = "flex";
+        form.style.justifyContent = "center"
+        form.innerHTML = '{% csrf_token %}';
+
+        var deleteb = document.createElement('button')
+        deleteb.setAttribute('id', "del" + i)
+        deleteb.textContent = "Delete"
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+        });
+
+        form.setAttribute('id', "form-" + i);
+
+        var user_name = document.createElement('input');
+        var indexs = document.createElement('input');
+        indexs.setAttribute('name', "i");
+        indexs.value = i;
+        console.log(indexs.value)
+        indexs.style.display = "none";
+        user_name.setAttribute('type', "text");
+        user_name.setAttribute('id', "name-" + i);
+        user_name.setAttribute('placeholder', "Enter your name");
+        user_name.setAttribute('name', "name-" + i);
+
+        var user_password_input = document.createElement('input');
+        user_password_input.setAttribute('type', "password");
+        user_password_input.setAttribute('id', "password-" + i);
+        user_password_input.setAttribute('placeholder', "Enter your password");
+        user_password_input.setAttribute('name', "password-" + i);
+
+
+        function deleteDiv(i) {
+            var divToRemove = document.getElementById('div-' + i);
+            submit.remove();
+            submit2.remove();
+            form.remove();
+            dcc.remove();
+            deleteb.remove();
+            divc.remove();
+            divToRemove.remove();
+        }
+
+        (function (index) {
+            submit.addEventListener('click', function () {
+                var inputName = document.getElementById("name-" + index);
+                inputName.style.display = "block"; /* Display the input field */
+                var f = document.getElementById("form-" + index)
+                f.style.display = "block"; /* Display the form */
+                var pass = document.getElementById('password-' + index);
+                pass.style.display = "block"
+                var sub = document.getElementById('butt11-' + index)
+                sub.textContent = "change the data";
+                sub.style.display = "block"
+            });
+
+            deleteb.addEventListener('click', function () {
+                var result = confirm("Do you want to delete the selected record?");
+                console.log(result)
+                if (result) {
+                    console.log(result);
+                    // User clicked "OK"
+                    // Perform the desired action here
+                    var index1 = idm[index];
+                    console.log(index1)
+                    fetch("{% url 'coder_kira_12' %}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": getCookie("csrftoken") // Include the CSRF token in the headers
+                        },
+                        body: JSON.stringify({ index1: index1 }) // Convert the 'context_json' and 'index' to JSON and send them as the request body
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data); // Handle the response from the server
+                            deleteDiv(index);
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
+                        });
+                }
+            });
+
+            submit2.addEventListener('click', function () {
+                var inputPassword = document.getElementById("password-" + index);
+                inputPassword.style.display = "block"; /* Display the input field */
+                form.style.display = "block"; /* Display the form */
+            });
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                // Get the index from the form ID
+                var index1 = idm[index];
+                console.log(index1)
+                // Get the data values from the form
+                var newName = document.getElementById("name-" + index).value;
+                var newPassword = document.getElementById("password-" + index).value;
+
+                var requestBody = {
+                    index1: index1,
+                    newName: newName,
+                    newPassword: newPassword
+                };
+
+
+                context_json.user_account[index1] = newName; // Update the 'user_account' value at the correct index
+                alert("User name updated successfully!");
+                console.log(index1)
+                // Send the updated data to the server
+                fetch("{% url 'user_data' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCookie("csrftoken") // Include the CSRF token in the headers
+                    },
+                    body: JSON.stringify(requestBody) // Convert the 'context_json' and 'index' to JSON and send them as the request body
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert("data deleted succefully")
+                        console.log(data); // Handle the response from the server
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+
+                    });
+            });
+
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        // Check if the cookie name matches the csrf token cookie name
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+        })(i);
+
+        form.appendChild(user_name);
+        // form.appendChild(submit);
+        form.appendChild(br1);
+        form.appendChild(user_password_input);
+        form.appendChild(indexs);
+        form.appendChild(submit2);
+        form.appendChild(br2);
+        // form.appendChild(change_name);
+        divc.appendChild(dcc);
+        divc.appendChild(submit)
+        divc.appendChild(deleteb);
+        divc.appendChild(form);
+        divm.appendChild(divc);
+    }
+</script>
+{% endif %}
+</body>
+</html>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>user data</title>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            background-image: url("https://static.vecteezy.com/system/resources/previews/001/330/277/original/cyber-technology-security-network-protection-design-free-vector.jpg");-->
+<!--            background-size: cover;-->
+<!--            background-position: center;-->
+<!--        }-->
+
+<!--        .container {-->
+<!--            display: flex;-->
+<!--            justify-content: center;-->
+<!--            align-items: center;-->
+<!--            width: 100%;-->
+<!--            height: 100vh;-->
+<!--        }-->
+
+<!--        .content {-->
+<!--            padding: 20px;-->
+<!--            border-radius: 5px;-->
+<!--            width: 950px;-->
+<!--            height: 80vh;-->
+<!--            background-color: rgba(255, 255, 255, 0.9);-->
+<!--            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);-->
+<!--            overflow: auto;-->
+<!--        }-->
+
+<!--        .content p {-->
+<!--            font-size: 24px;-->
+<!--            color: white;-->
+<!--            background-color: #1c2e4a;-->
+<!--            margin-bottom: 10px;-->
+<!--            padding: 10px;-->
+<!--            line-height: 1.5;-->
+<!--        }-->
+
+<!--        button {-->
+<!--            font-size: 20px;-->
+<!--            display: block;-->
+<!--            margin: 10px auto;-->
+<!--            width: 200px;-->
+<!--            height: 50px;-->
+<!--            background-color: #4D4DFF;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            border-radius: 30px;-->
+<!--            cursor: pointer;-->
+<!--        }-->
+
+<!--        input {-->
+<!--            background-color:black;-->
+<!--            width: 70%;-->
+<!--            height: 50px;-->
+<!--            text-align:center;-->
+<!--            font-size: 20px;-->
+<!--            color: #fff;-->
+<!--            border: none;-->
+<!--            border-radius: 14px;-->
+<!--            margin-bottom: 10px;-->
+<!--            cursor: pointer;-->
+<!--            display: none; /* Hide inputs initially */-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container">-->
+<!--    <div id="naam" class="content"></div>-->
+<!--</div>-->
+<!--<br>-->
+<!--<br>-->
+<!--{% if context_data %}-->
+<!--<script>-->
+<!--    var context_json = JSON.parse('{{ context_data|safe|escapejs }}');-->
+<!--    console.log(context_json);-->
+<!--    var website_name = context_json['website_name'];-->
+<!--    var user_account = context_json['user_account'];-->
+<!--    var user_password = context_json['user_password'];-->
+<!--    var rating = context_json['rating'];-->
+<!--    var len = Object.keys(website_name).length;-->
+
+<!--    var divm = document.getElementById('naam');-->
+<!--    console.log(divm);-->
+
+<!--    for (var i = 0; i < len; i++) {-->
+<!--        var divc = document.createElement('div');-->
+<!--        var dcc = document.createElement('p');-->
+<!--        var br1 = document.createElement('br');-->
+<!--        var br2 = document.createElement('br');-->
+<!--        dcc.textContent = i + "] Website Name: " + website_name[i];-->
+
+<!--        var submit = document.createElement('button');-->
+<!--        var submit2 = document.createElement('button');-->
+<!--        submit.textContent = "Change the user name";-->
+<!--        submit2.textContent = "Change the user password";-->
+<!--        submit.setAttribute('id', "butt-" + i);-->
+<!--        submit2.setAttribute('id', "butt11-" + i);-->
+
+<!--        var change_name = document.createElement('button');-->
+<!--        change_name.textContent = "Change data";-->
+<!--        change_name.style.display = "none";-->
+<!--        change_name.setAttribute('id', "butt1-" + i);-->
+<!--        change_name.setAttribute('class', "changename");-->
+<!--        submit.setAttribute('class', "changename");-->
+<!--        submit2.setAttribute('class', "changename");-->
+
+<!--        var form = document.createElement('form');-->
+<!--        form.style.display = "none"; /* Hide the form initially */-->
+<!--        form.setAttribute('method', "POST");-->
+<!--        form.setAttribute('action', "/userdata");-->
+
+<!--        form.addEventListener('submit', function (e) {-->
+<!--            e.preventDefault();-->
+<!--        });-->
+
+<!--        form.setAttribute('id', "form-" + i);-->
+
+<!--        var user_name = document.createElement('input');-->
+<!--        user_name.setAttribute('type', "text");-->
+<!--        user_name.setAttribute('id', "name-" + i);-->
+<!--        user_name.setAttribute('placeholder', "Enter your name");-->
+
+<!--        var user_password = document.createElement('input');-->
+<!--        user_password.setAttribute('type', "password");-->
+<!--        user_password.setAttribute('id', "password-" + i);-->
+<!--        user_password.setAttribute('placeholder', "Enter your password");-->
+
+<!--        submit.addEventListener('click', function () {-->
+<!--            var inputName = document.getElementById("name-" + i);-->
+<!--            inputName.style.display = "block"; /* Display the input field */-->
+<!--            form.style.display = "block"; /* Display the form */-->
+<!--            change_name.style.display = "block"; /* Display the 'Change data' button */-->
+<!--        });-->
+
+<!--        submit2.addEventListener('click', function () {-->
+<!--            var inputPassword = document.getElementById("password-" + i);-->
+<!--            inputPassword.style.display = "block"; /* Display the input field */-->
+<!--            form.style.display = "block"; /* Display the form */-->
+<!--            change_name.style.display = "block"; /* Display the 'Change data' button */-->
+<!--        });-->
+
+<!--        change_name.addEventListener('click', function () {-->
+<!--            var newName = document.getElementById("name-" + i).value;-->
+<!--            context_json.user_account[i] = newName;-->
+<!--            alert("User name updated successfully!");-->
+<!--        });-->
+
+<!--        form.appendChild(user_name);-->
+<!--        // form.appendChild(submit);-->
+<!--        form.appendChild(br1);-->
+<!--        form.appendChild(user_password);-->
+<!--        form.appendChild(submit2);-->
+<!--        form.appendChild(br2);-->
+<!--        form.appendChild(change_name);-->
+<!--        divc.appendChild(dcc);-->
+<!--        divc.appendChild(submit)-->
+<!--        divc.appendChild(form);-->
+<!--        divm.appendChild(divc);-->
+<!--    }-->
+<!--</script>-->
+<!--{% endif %}-->
+<!--</body>-->
+<!--</html>-->

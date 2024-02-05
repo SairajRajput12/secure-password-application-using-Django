@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Password Secure Application</title>
+    <style>
+        body {
+            background-image: url("https://static.vecteezy.com/system/resources/previews/001/330/277/original/cyber-technology-security-network-protection-design-free-vector.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5); /* Add a semi-transparent overlay if desired */
+        }
+
+        .content {
+            text-align: center;
+            padding: 20px;
+            background-color: #1c2e4a;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #first, #second ,#third{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 15vh;
+            width: 75vh;
+            /* background-color: #3DED97; */
+            background-color : black;
+            font-size: 30px;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+    /* ...existing styles... */
+
+
+    #formSubmission,#dataretrival,#changePasswordButton {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #4D4DFF;
+        height: 5vh;
+        width: 30vh;
+        margin: 0 auto; /* Center horizontally */
+        margin-top: 10px; /* Add some top margin for spacing */
+        font-size: 20px;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+    }
+
+    /* ...existing styles... */
+        #third{
+            background-color : black;
+        }
+
+
+        #second {
+               /* background-color: #4D4DFF; */
+                background-color:black;
+        }
+
+        h1,h11 {
+            color: red;
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        #h1,#h2,#h3,#h11,#h12,#h111{
+            background-color:black;
+            width: 70%;
+            height: 100px;
+            text-align:center;
+            font-size: 25px;
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1 id="L" style="color: white; font-size: 50px;">Welcome to the Secure Password Application!</h1>
+            <button id="first" onclick="myFun1()"><b>Add your password</b></button>
+            <button id="second" onclick="myFun2()"><b>show my password list</b></button>
+            <button id="third" onclick="myFun3()"><b>Change the password</b></button>
+<!--            <button id="fifth" onclick=""><b>show my password list</b></button>-->
+
+
+            <form method="POST" id="user_input" action="{% url 'add_password' %}" style="display:none">
+                {% csrf_token %}
+                <h3 style="color:red;font-size:24px" >* if you want to genrate your password then you just add you user name and website name *</h3>
+                <p id="websiteName">
+                    <input id="h1" name="h1" type="password" placeholder="enter the website name">
+                </p>
+
+                <p>
+                    <input id="h2" name="h2" type="password" placeholder="enter your user name or any id assosiated with that account">
+                </p>
+
+                <p>
+                    <input id="h3" name="h3" type="password" placeholder="enter the password of that account">
+                </p>
+
+
+                <button id="formSubmission">Add the data</button>
+<!--                <button id="genrate">genrate password</button>-->
+            </form>
+
+
+            <form method="POST" id="user_retrival" action="{% url 'get_password' %}" style="display:none">
+                {% csrf_token %}
+                <h3 style="color:red;font-size:25px" >* If you forget your user name then keep user name section empty. *</h3>
+                <p id="websiteName1">
+                    <input name="h11" id="h11"  type="password" placeholder="Please enter the website name">
+                </p>
+
+                <p>
+                    <input name="h12" id="h12" type="password" placeholder="enter the user name of that account">
+                </p>
+
+                <button id="dataretrival">Add the data</button>
+<!--                <button id="genrate">genrate password</button>-->
+            </form>
+
+
+            <form method="POST" id="changeThePassword" action="{% url 'change_password' %}" style="display:none">
+                {% csrf_token %}
+
+                <p id="websiteName11">
+                    <input name="h11" id="h111"  type="password" placeholder="enter the name of the website">
+                </p>
+
+
+                <button id="changePasswordButton">Add the data</button>
+<!--                <button id="genrate">genrate password</button>-->
+            </form>
+
+
+        </div>
+    </div>
+
+    {% if responded%}
+    <script>
+        confirm('data added succesfully')
+    </script>
+    {% endif %}
+
+
+
+
+<!--achhi khasi javascript-->
+    <script>
+    function myFun1() {
+        document.getElementById('second').style.display = "none";
+        document.getElementById('first').style.display = "none";
+        document.getElementById('third').style.display = "none";
+
+        // document.getElementById('fifth').style.display = "none";
+        document.getElementById('L').innerHTML = 'Add your password and keep that between both of us'
+        document.getElementById('user_input').style.display = "block";
+    }
+
+    function myFun2() {
+        document.getElementById('first').style.display = "none";
+        document.getElementById('second').style.display = "none";
+        // document.getElementById('fifth').style.display = "none";
+        document.getElementById('third').style.display = "none";
+
+        document.getElementById('L').innerHTML = 'your data is safe and making it private is our first priority'
+        document.getElementById('user_retrival').style.display = "block";
+    }
+
+    function myFun3(){
+        document.getElementById('first').style.display = "none";
+        document.getElementById('second').style.display = "none";
+        // document.getElementById('fifth').style.display = "none";
+        document.getElementById('third').style.display = "none";
+        // document.getElementById('fourth').style.display = "none";
+        document.getElementById('L').innerHTML = 'enter the website name that you want to present'
+        document.getElementById('changeThePassword').style.display = "block";
+    }
+</script>
+</body>
+</html>
+  

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Here is retrieved data</title>
+    <style>
+        body {
+            background-image: url("https://static.vecteezy.com/system/resources/previews/001/330/277/original/cyber-technology-security-network-protection-design-free-vector.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .content {
+            text-align: center;
+            padding: 20px;
+            background-color: #1c2e4a;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid white;
+            padding: 8px;
+            color: white;
+        }
+
+        th {
+            background-color: black;
+            font-weight: bold;
+            color:white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #283c5f;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+
+    </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="content">
+      <h1 style="color:white">The user data</h1>
+      <table id="myTable">
+        <thead></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  {% if context_json %}
+  <script>
+    var context_json = JSON.parse('{{ context_json|safe|escapejs }}');
+    var website_name = context_json['website_name'];
+    var user_account = context_json['user_account'];
+    var user_password = context_json['user_password'];
+    var rating = context_json['ratting'];
+
+    var len = Object.keys(website_name).length;
+
+    var tableBody = document.getElementById('tableBody');
+    tableBody.innerHTML = '';
+
+    // Create table header row
+    var tableHeader = document.createElement('tr');
+    for (var key in context_json) {
+      if(key == "id"){
+        continue;
+      }
+      if (context_json.hasOwnProperty(key)) {
+        var headerCell = document.createElement('th');
+        headerCell.textContent = key;
+        tableHeader.appendChild(headerCell);
+      }
+    }
+    tableBody.appendChild(tableHeader);
+
+    for (var i = 0; i < len; i++) {
+      if (website_name[i] == null) {
+        continue;
+      }
+
+      var row = document.createElement('tr');
+
+      var websiteCell = document.createElement('td');
+      websiteCell.textContent = website_name[i];
+      row.appendChild(websiteCell);
+
+      var accountCell = document.createElement('td');
+      accountCell.textContent = user_account[i];
+      row.appendChild(accountCell);
+
+
+      var passwordCell = document.createElement('td');
+      passwordCell.textContent = user_password[i];
+      row.appendChild(passwordCell);
+
+
+      var ratingCell = document.createElement('td');
+      ratingCell.textContent = rating[i];
+      row.appendChild(ratingCell);
+
+
+
+      tableBody.appendChild(row);
+    }
+  </script>
+  {% endif %}
+
+</body>
+</html>
